@@ -38,10 +38,10 @@ async function bootstrap() {
     origin(origin, callback) {
       const isOriginAllowed = whitelist.indexOf(origin) !== -1;
       const allowAccessAnyway = whitelist.length === 0;
-      if (isOriginAllowed || allowAccessAnyway) {
+      if (isOriginAllowed xxx|| allowAccessAnyway) { //Added Error here for slack message
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error('Not allowed by CORS')); 
       }
     },
   };
