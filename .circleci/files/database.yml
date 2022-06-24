@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: > 
+        AWS CloudFormation Sample Template for creating an Amazon RDS DB instance
+
+Parameters:
+  DefaultVPC:
+    Default: vpc-0b80af7aff589c377
+    Description: Default VPC ID
+    Type: String
+  DBInstanceID:
+    Default: database-55c375200f031261
+    Description: My database instance
+    Type: String
+  DBName:
+    Default: postgres
+    Description: udapeople Database
+    Type: String
+  DBInstanceClass:
+    Default: db.m5.large
+    Description: DB instance class
+    Type: String
+  DBAllocatedStorage:
+    Default: '50'
+    Description: The size of the database (GiB)
+    Type: Number
+  DBUsername:
+    Default: postgres
+    NoEcho: 'true'
+    Description: Username for MySQL database access
+    Type: String
+  DBPassword: 
+    Default: postgres
+    NoEcho: 'true'
+    Description: Password MySQL database access
+    Type: String
+
+Resources:
+
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+        GroupDescription: Allow traffic to PostgresRDS
+        GroupName: rds-55c375200f031261
+        SecurityGroupIngress:
+           - IpProtocol: tcp
+             FromPort: 5432
+             ToPort: 5432
+             CidrIp: 0.0.0.0/0
+        SecurityGroupEgress:
+           - IpProtocol: tcp
+             FromPort: 5432
+             ToPort: 5432
+             CidrIp: 0.0.0.0/0
+        VpcId: !Ref DefaultVPC
+
+  MyDB:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBInstanceIdentifier: !Ref DBInstanceID
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref DBAllocatedStorage
+      Engine: postgres
+      EngineVersion: "13.4"
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      PubliclyAccessible: true
+      Port: 5432
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+
