@@ -5,9 +5,6 @@ orbs:
 
 commands:
   destroy_environment:
-    parameters:
-      layer:
-        type: string
     steps:
       - run:
           name: Destroy environment
