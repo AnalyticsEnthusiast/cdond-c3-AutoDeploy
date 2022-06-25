@@ -181,7 +181,7 @@ jobs:
           command: |
            apk add --update tar
            apk add --update gzip 
-           apk add --update awscli
+           apk add --no-cache aws-cli
            apk add --update ansible 
       - run:
           name: Configure server
@@ -191,6 +191,19 @@ jobs:
       - destroy_environment
 
 workflows:
+
+  TestWorkflow:
+    jobs:
+      - deploy-infrastructure:
+          filters:
+            branches:
+              only: fb-deployment-config
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+          filters:
+            branches:
+              only: fb-deployment-config
+
   MainWorkflow:
     jobs:
       - build-frontend:
