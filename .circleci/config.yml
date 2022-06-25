@@ -180,6 +180,7 @@ jobs:
           command: |
            yum install tar gzip -y
            yum install python3 py3-pip -y
+           yum install epel-release -y
            yum install ansible -y
       - attach_workspace:
           at: ~/
