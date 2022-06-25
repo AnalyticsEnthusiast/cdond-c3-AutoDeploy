@@ -175,15 +175,15 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["f9:9f:a0:97:e6:64:85:00:8b:78:46:3b:82:f1:f3:99"]
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
            apk add --update tar
            apk add --update gzip 
            apk add --no-cache python3 py3-pip
-           apk add --update ansible 
+           apk add --update ansible
+      - attach_workspace:
+          at: ~/
       - run:
           name: Configure server
           command: |
