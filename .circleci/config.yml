@@ -176,12 +176,18 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["f9:9f:a0:97:e6:64:85:00:8b:78:46:3b:82:f1:f3:99"]
       - run:
-          name: Install dependencies
+          name: Install tar, wget gzip and python 3
           command: |
            yum install tar gzip -y
            yum install python3 py3-pip -y
-           yum install epel-release -y
-           yum install ansible -y
+           yum install wget -y
+      - run:
+          name: Install Ansible
+          command: |
+            wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+            yum install epel-release-latest-7.noarch.rpm -y
+            yum update -y
+            yum install ansible -y
       - attach_workspace:
           at: ~/
       - run:
