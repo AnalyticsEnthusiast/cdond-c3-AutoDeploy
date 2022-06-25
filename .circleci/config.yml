@@ -169,7 +169,8 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli 
+      #python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -181,7 +182,7 @@ jobs:
           command: |
            apk add --update tar
            apk add --update gzip 
-           apk add --no-cache aws-cli
+           apk add --no-cache python3 py3-pip
            apk add --update ansible 
       - run:
           name: Configure server
