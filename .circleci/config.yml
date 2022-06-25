@@ -178,10 +178,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-           apk add --update tar
-           apk add --update gzip 
-           apk add --no-cache python3 py3-pip
-           apk add --update ansible
+           yum install tar gzip -y
+           yum install python3 py3-pip -y
+           yum install ansible -y
       - attach_workspace:
           at: ~/
       - run:
