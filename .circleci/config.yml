@@ -262,17 +262,16 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            # aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            aws s3 cp dist s3://udapeople-12adb49 --recursive
-      #- destroy_environment  
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy_environment  
 
 workflows:
-  TestWorkflow:
-    jobs:
-      - deploy-frontend:
-          filters:
-              branches:
-                only: fb-deploy-2b
+  # TestWorkflow:
+  #   jobs:
+  #     - deploy-frontend:
+  #         filters:
+  #             branches:
+  #               only: fb-deploy-2b
 
   MainWorkflow:
     jobs:
