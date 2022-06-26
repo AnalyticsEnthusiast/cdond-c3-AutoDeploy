@@ -227,9 +227,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install tar, wget gzip and python 3
+          name: Install tar, wget, curl, gzip and python 3
           command: |
-           yum install tar gzip -y
+           yum install tar gzip curl -y
            yum install python3 py3-pip -y
            yum install wget -y
       - run:
@@ -239,6 +239,12 @@ jobs:
             yum install epel-release-latest-7.noarch.rpm -y
             yum update -y
             yum install ansible -y
+      - run:
+          name: Install node and npm
+          command: |
+                curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+                . ~/.nvm/nvm.sh
+                nvm install node
       - attach_workspace:
           at: ~/
       - run:
