@@ -221,11 +221,57 @@ jobs:
             fi
       - destroy_environment
 
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli 
+    steps:
+      - checkout
+      - run:
+          name: Install tar, wget, curl, gzip and python 3
+          command: |
+           yum install tar gzip curl -y
+           yum install python3 py3-pip -y
+           yum install wget -y
+      - run:
+          name: Install Ansible
+          command: |
+            wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+            yum install epel-release-latest-7.noarch.rpm -y
+            yum update -y
+            yum install ansible -y
+      - run:
+          name: Install node and npm
+          command: |
+                yum install -y gcc-c++ make 
+                curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+                yum install -y nodejs
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy_environment  
 
 workflows:
-  TestWorkflow:
-    jobs:
-      - run-migrations
+  # TestWorkflow:
+  #   jobs:
+  #     - deploy-frontend:
+  #         filters:
+  #             branches:
+  #               only: fb-deploy-2b
 
   MainWorkflow:
     jobs:
@@ -264,17 +310,22 @@ workflows:
                 only: master
             context: Slack_Container_Context
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: master
+            requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+            filters:
+              branches:
+                only: master
       - configure-infrastructure:
-          requires: [deploy-infrastructure]
-          filters:
-            branches:
-              only: master
+            requires: [deploy-infrastructure]
+            filters:
+              branches:
+                only: master
       - run-migrations:
-          requires: [configure-infrastructure]
-          filters:
-            branches:
-              only: master
+            requires: [configure-infrastructure]
+            filters:
+              branches:
+                only: master
+      - deploy-frontend:
+            requires: [run-migrations]
+            filters:
+              branches:
+                only: master
