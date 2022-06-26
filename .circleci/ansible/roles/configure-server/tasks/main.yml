@@ -11,10 +11,6 @@
     state: latest
     update_cache: yes
 
-- name: "Upgrade npm"
-  become: true
-  shell: npm install -g npm
-
 - name: "install pm2"
   become: true
   npm:
