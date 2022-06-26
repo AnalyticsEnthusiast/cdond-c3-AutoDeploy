@@ -217,7 +217,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              aws ssm put-parameter --name "/MigrationStatus/status" --value "1" --type "String"
+              aws ssm put-parameter --name "/Migration_${CIRCLE_WORKFLOW_ID:0:7}/status" --value "1" --type "String"
             fi
       - destroy_environment
 
