@@ -225,8 +225,7 @@ jobs:
 workflows:
   TestWorkflow:
     jobs:
-      - run-migrations:
-          requires: [fb-deployment-config]
+      - run-migrations
 
   MainWorkflow:
     jobs:
