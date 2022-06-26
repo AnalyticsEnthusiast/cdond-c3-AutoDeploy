@@ -210,8 +210,8 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            apt update -y
-            apt install aws-cli -y
+            sudo apt update -y
+            sudo apt install aws-cli -y
       - run:
           name: Send migration results to SSM Parameter Store
           command: |
