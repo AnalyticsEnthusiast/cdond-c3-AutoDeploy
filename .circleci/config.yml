@@ -265,13 +265,55 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy_environment  
 
+  deploy-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["f9:9f:a0:97:e6:64:85:00:8b:78:46:3b:82:f1:f3:99"]
+      - run:
+          name: Install tar, wget gzip and python 3
+          command: |
+           yum install tar gzip -y
+           yum install python3 py3-pip -y
+           yum install wget -y
+      - run:
+          name: Install Ansible
+          command: |
+            wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+            yum install epel-release-latest-7.noarch.rpm -y
+            yum update -y
+            yum install ansible -y
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd backend
+            npm install
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy_environment
+       
+
 workflows:
   # TestWorkflow:
   #   jobs:
   #     - deploy-frontend:
   #         filters:
   #             branches:
-  #               only: fb-deploy-2b
+  #               only: fb-deploy-backend
+  #     - deploy-backend:
+  #         filters:
+  #             branches:
+  #               only: fb-deploy-backend
 
   MainWorkflow:
     jobs:
@@ -324,8 +366,13 @@ workflows:
             filters:
               branches:
                 only: master
-      - deploy-frontend:
-            requires: [run-migrations]
-            filters:
-              branches:
-                only: master
+      # - deploy-frontend:
+      #       requires: [run-migrations]
+      #       filters:
+      #         branches:
+      #           only: master
+      # - deploy-backend:
+      #       requires: [run-migrations]
+      #       filters:
+      #         branches:
+      #           only: master
