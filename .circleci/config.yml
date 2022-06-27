@@ -215,8 +215,9 @@ jobs:
       - run:
           name: Send migration results to SSM Parameter Store
           command: |
-            RESULT=$(grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt)
-            if [ "${RESULT}" = "0" ]; then
+            grep "has been executed successfully." ~/project/backend/migrations_dump.txt
+            RC=$?
+            if [ "${RC}" = "0" ]; then
               aws ssm put-parameter --name "/Migration/status" --value "1" --type "String"
             fi
       - destroy_environment
