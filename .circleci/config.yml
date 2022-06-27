@@ -215,9 +215,9 @@ jobs:
       - run:
           name: Send migration results to SSM Parameter Store
           command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              aws ssm put-parameter --name "/Migration_${CIRCLE_WORKFLOW_ID:0:7}/status" --value "1" --type "String"
+            RESULT=$(grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt)
+            if [ "${RESULT}" = "0" ]; then
+              aws ssm put-parameter --name "/Migration/status" --value "1" --type "String"
             fi
       - destroy_environment
 
@@ -294,7 +294,6 @@ jobs:
             npm install
             npm run build
             cd ..
-            # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
@@ -304,16 +303,16 @@ jobs:
        
 
 workflows:
-  # TestWorkflow:
-  #   jobs:
-  #     - deploy-frontend:
-  #         filters:
-  #             branches:
-  #               only: fb-deploy-backend
-  #     - deploy-backend:
-  #         filters:
-  #             branches:
-  #               only: fb-deploy-backend
+  TestWorkflow:
+    jobs:
+      - deploy-frontend:
+          filters:
+              branches:
+                only: fb-deploy-backend
+      - deploy-backend:
+          filters:
+              branches:
+                only: fb-deploy-backend
 
   MainWorkflow:
     jobs:
@@ -366,13 +365,13 @@ workflows:
             filters:
               branches:
                 only: master
-      # - deploy-frontend:
-      #       requires: [run-migrations]
-      #       filters:
-      #         branches:
-      #           only: master
-      # - deploy-backend:
-      #       requires: [run-migrations]
-      #       filters:
-      #         branches:
-      #           only: master
+      - deploy-frontend:
+            requires: [run-migrations]
+            filters:
+              branches:
+                only: master
+      - deploy-backend:
+            requires: [run-migrations]
+            filters:
+              branches:
+                only: master
