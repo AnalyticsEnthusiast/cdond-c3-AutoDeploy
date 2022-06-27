@@ -215,9 +215,8 @@ jobs:
       - run:
           name: Send migration results to SSM Parameter Store
           command: |
-            grep "has been executed successfully." ~/project/backend/migrations_dump.txt
-            RC=$?
-            if [ "${RC}" = "0" ]; then
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt; then
+              echo "Sending ${RC} parameter to SSM"
               aws ssm put-parameter --name "/Migration/status" --value "1" --type "String"
             else
               echo "Something went wrong"
@@ -265,7 +264,8 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 cp dist s3://udapeople-ce4937b --recursive
       #- destroy_environment  
 
   deploy-backend:
@@ -288,6 +288,12 @@ jobs:
             yum install epel-release-latest-7.noarch.rpm -y
             yum update -y
             yum install ansible -y
+      - run:
+          name: Install node and npm
+          command: |
+                yum install -y gcc-c++ make 
+                curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+                yum install -y nodejs
       - attach_workspace:
           at: ~/
       - run:
@@ -308,6 +314,10 @@ jobs:
 workflows:
   TestWorkflow:
     jobs:
+      # - run-migrations:
+      #     filters:
+      #         branches:
+      #           only: fb-deploy-backend
       - deploy-frontend:
           filters:
               branches:
