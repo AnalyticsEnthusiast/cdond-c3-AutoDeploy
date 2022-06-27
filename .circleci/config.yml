@@ -308,14 +308,18 @@ jobs:
 workflows:
   TestWorkflow:
     jobs:
-      - deploy-frontend:
+      - run_migrations:
           filters:
               branches:
                 only: fb-deploy-backend
-      - deploy-backend:
-          filters:
-              branches:
-                only: fb-deploy-backend
+      # - deploy-frontend:
+      #     filters:
+      #         branches:
+      #           only: fb-deploy-backend
+      # - deploy-backend:
+      #     filters:
+      #         branches:
+      #           only: fb-deploy-backend
 
   MainWorkflow:
     jobs:
