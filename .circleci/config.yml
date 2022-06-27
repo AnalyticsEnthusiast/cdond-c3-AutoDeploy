@@ -219,8 +219,10 @@ jobs:
             RC=$?
             if [ "${RC}" = "0" ]; then
               aws ssm put-parameter --name "/Migration/status" --value "1" --type "String"
+            else
+              echo "Something went wrong"
             fi
-      - destroy_environment
+      #- destroy_environment
 
   deploy-frontend:
     docker:
@@ -264,7 +266,7 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy_environment  
+      #- destroy_environment  
 
   deploy-backend:
     docker:
@@ -300,7 +302,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy_environment
+      #- destroy_environment
        
 
 workflows:
