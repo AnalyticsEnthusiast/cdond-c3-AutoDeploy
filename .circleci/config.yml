@@ -265,8 +265,8 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            #aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-            aws s3 cp dist s3://udapeople-ce4937b --recursive
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            #aws s3 cp dist s3://udapeople-ce4937b --recursive
       #- destroy_environment  
 
   deploy-backend:
@@ -355,27 +355,27 @@ jobs:
       #- destroy_environment
 
 workflows:
-  TestWorkflow:
-    jobs:
-      - run-migrations:
-              filters:
-                branches:
-                  only: fb-smoke-test
-      - deploy-frontend:
-          requires: [run-migrations]
-          filters:
-              branches:
-                only: fb-smoke-test
-      - deploy-backend:
-          requires: [run-migrations]
-          filters:
-              branches:
-                only: fb-smoke-test
-      - smoke-test:
-            requires: [deploy-backend, deploy-frontend]
-            filters:
-                branches:
-                  only: fb-smoke-test
+  # TestWorkflow:
+  #   jobs:
+  #     - run-migrations:
+  #             filters:
+  #               branches:
+  #                 only: fb-smoke-test
+  #     - deploy-frontend:
+  #         requires: [run-migrations]
+  #         filters:
+  #             branches:
+  #               only: fb-smoke-test
+  #     - deploy-backend:
+  #         requires: [run-migrations]
+  #         filters:
+  #             branches:
+  #               only: fb-smoke-test
+  #     - smoke-test:
+  #           requires: [deploy-backend, deploy-frontend]
+  #           filters:
+  #               branches:
+  #                 only: fb-smoke-test
 
   MainWorkflow:
     jobs:
