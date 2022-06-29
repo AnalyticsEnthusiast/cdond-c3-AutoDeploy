@@ -198,9 +198,15 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Install node and npm
+          command: |
+                yum install -y gcc-c++ make 
+                curl -sL https://rpm.nodesource.com/setup_14.x | bash -
+                yum install -y nodejs
       - run:
           name: Run migrations
           command: |
@@ -208,16 +214,11 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
       - run:
-          name: Install awscli
-          command: |
-            sudo apt update -y
-            sudo apt install awscli -y
-      - run:
           name: Send migration results to SSM Parameter Store
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt; then
-              echo "Sending ${RC} parameter to SSM"
-              aws ssm put-parameter --name "/Migration/status" --value "1" --type "String"
+              echo "Sending parameter to SSM"
+              aws ssm put-parameter --name "/Migration/status" --value "1" --type "String" --overwrite
             else
               echo "Something went wrong"
             fi
