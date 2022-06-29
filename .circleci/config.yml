@@ -355,20 +355,27 @@ jobs:
       #- destroy_environment
 
 workflows:
-  # TestWorkflow:
-  #   jobs:
-      # - run-migrations:
-      #     filters:
-      #         branches:
-      #           only: fb-deploy-backend
-      # - deploy-frontend:
-      #     filters:
-      #         branches:
-      #           only: fb-deploy-backend
-      # - deploy-backend:
-      #     filters:
-      #         branches:
-      #           only: fb-deploy-backend
+  TestWorkflow:
+    jobs:
+      - run-migrations:
+              filters:
+                branches:
+                  only: fb-smoke-test
+      - deploy-frontend:
+          requires: [run-migrations]
+          filters:
+              branches:
+                only: fb-smoke-test
+      - deploy-backend:
+          requires: [run-migrations]
+          filters:
+              branches:
+                only: fb-smoke-test
+      - smoke-test:
+            requires: [deploy-backend, deploy-frontend]
+            filters:
+                branches:
+                  only: fb-smoke-test
 
   MainWorkflow:
     jobs:
