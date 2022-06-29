@@ -1,9 +1,14 @@
 ---
+- name: Creates dest directory
+  file:
+    path: ~/dest
+    state: directory
+
 - name: "Extract the tarball"
   become: true
   unarchive:
-    src: ~/backend/artifact.tar.gz
-    dest: ~/
+    src: "files/artifact.tar.gz"
+    dest: "~/dest"
 
 - name: "Start the app"
   shell: |
