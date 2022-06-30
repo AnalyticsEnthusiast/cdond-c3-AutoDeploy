@@ -7,7 +7,7 @@
 - name: "Extract the tarball"
   become: true
   unarchive:
-    src: "~/artifact.tar.gz"
+    src: "/root/project/artifact.tar.gz"
     dest: "~/dest"
 
 - name: "Start the app"
