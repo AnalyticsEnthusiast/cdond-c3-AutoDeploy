@@ -7,7 +7,7 @@
 - name: "Extract the tarball"
   become: true
   unarchive:
-    src: "~/.circleci/artifact.tar.gz"
+    src: "~/artifact.tar.gz"
     dest: "~/dest"
 
 - name: "Start the app"
