@@ -11,6 +11,20 @@
     state: latest
     update_cache: yes
 
+- name: "Add parameters to .bashrc"
+  shell: |
+    cd /home/ubuntu
+    echo "export TYPEORM_CONNECTION={{ TYPEORM_CONNECTION }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_ENTITIES={{ TYPEORM_ENTITIES }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_HOST={{ TYPEORM_HOST }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_PORT=5432" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_USERNAME={{ TYPEORM_USERNAME }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_PASSWORD={{ TYPEORM_PASSWORD }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_DATABASE={{ TYPEORM_DATABASE }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_MIGRATIONS={{ TYPEORM_MIGRATIONS }}" >> /home/ubuntu/.bashrc
+    echo "export TYPEORM_MIGRATIONS_DIR={{ TYPEORM_MIGRATIONS_DIR }}" >> /home/ubuntu/.bashrc
+    source /home/ubuntu/.bashrc
+
 - name: "install pm2"
   become: true
   npm:

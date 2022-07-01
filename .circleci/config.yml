@@ -194,7 +194,17 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml \
+            --extra-vars \
+            "TYPEORM_CONNECTION=${TYPEORM_CONNECTION} \
+            TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS} \
+            TYPEORM_ENTITIES=${TYPEORM_ENTITIES} \
+            TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS} \
+            TYPEORM_HOST=${TYPEORM_HOST} \
+            TYPEORM_PORT=5432 \
+            TYPEORM_USERNAME=${TYPEORM_USERNAME} \
+            TYPEORM_PASSWORD=${TYPEORM_PASSWORD} \
+            TYPEORM_DATABASE=${TYPEORM_DATABASE}"
       - destroy_environment
 
   run-migrations:
