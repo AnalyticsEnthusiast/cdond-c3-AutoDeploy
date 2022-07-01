@@ -361,10 +361,11 @@ jobs:
 
 workflows:
   TestWorkflow:
-    - smoke-test:
-            filters:
-                branches:
-                  only: [fb-smoke-test]
+    jobs:
+      - smoke-test:
+          filters:
+            branches:
+              only: [fb-smoke-test]
   
 
   MainWorkflow:
