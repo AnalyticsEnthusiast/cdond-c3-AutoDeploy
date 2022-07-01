@@ -13,6 +13,13 @@
     src: "/root/project/artifact.tar.gz"
     dest: "/home/ubuntu/app"
 
+- name: "Adjust permissions"
+  become: true
+  shell: |
+    cd /home/ubuntu
+    chown -R ubuntu:ubuntu app
+    chmod -R 744 app
+
 - name: "Start the app"
   shell: |
     cd /home/ubuntu/app/backend
