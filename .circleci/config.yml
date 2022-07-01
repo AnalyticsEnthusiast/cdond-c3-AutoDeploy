@@ -360,11 +360,11 @@ jobs:
       - destroy_environment
 
 workflows:
-  # TestWorkflow:
-  #   - smoke-test:
-  #           filters:
-  #               branches:
-  #                 only: [fb-smoke-test]
+  TestWorkflow:
+    - smoke-test:
+            filters:
+                branches:
+                  only: [fb-smoke-test]
   
 
   MainWorkflow:
