@@ -23,7 +23,7 @@
     echo "export TYPEORM_DATABASE={{ TYPEORM_DATABASE }}" >> /home/ubuntu/.bashrc
     echo "export TYPEORM_MIGRATIONS={{ TYPEORM_MIGRATIONS }}" >> /home/ubuntu/.bashrc
     echo "export TYPEORM_MIGRATIONS_DIR={{ TYPEORM_MIGRATIONS_DIR }}" >> /home/ubuntu/.bashrc
-    source /home/ubuntu/.bashrc
+    . /home/ubuntu/.bashrc
 
 - name: "install pm2"
   become: true
