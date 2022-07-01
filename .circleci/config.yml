@@ -362,11 +362,12 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              exit 0
+              # Test to see if rollback will work
+              exit 1 
             else
               exit 1
             fi
-      #- destroy_environment
+      - destroy_environment
 
 workflows:
   # TestWorkflow:
