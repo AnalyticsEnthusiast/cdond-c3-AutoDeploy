@@ -331,6 +331,8 @@ jobs:
            yum install tar gzip -y
            yum install python3 py3-pip -y
            yum install wget -y
+      - attach_workspace:
+          at: ~/
       - run:
           name: Get backend url and run smoke test
           command: |
