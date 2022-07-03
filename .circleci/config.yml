@@ -252,6 +252,7 @@ jobs:
       - run:
           name: Send migration results to DynamoDB
           command: |
+            cd ~/project/backend 
             if grep -q "No migrations are pending" ~/project/backend/migrations_dump.txt; then
               echo "Sending parameter to DynamoDB"
               aws dynamodb put-item --table-name migration-tbl --item "{\"ID\": { \"S\": \"55c375200f031261\" }, \"MigrationStatus\": {\"S\": \"1\"}}"
