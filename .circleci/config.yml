@@ -407,40 +407,40 @@ workflows:
 
   MainWorkflow:
     jobs:
-      - build-frontend:
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - build-backend:
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - test-frontend:
-            requires: [build-frontend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - test-backend:
-            requires: [build-backend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - scan-frontend:
-            requires: [build-frontend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - scan-backend:
-            requires: [build-backend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
+      # - build-frontend:
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - build-backend:
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - test-frontend:
+      #       requires: [build-frontend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - test-backend:
+      #       requires: [build-backend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - scan-frontend:
+      #       requires: [build-frontend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - scan-backend:
+      #       requires: [build-backend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
       - deploy-infrastructure:
             requires: [test-frontend, test-backend, scan-frontend, scan-backend]
             filters:
