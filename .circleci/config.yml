@@ -245,8 +245,10 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
             npm run migrations > migrations_dump.txt
+            cat migrations_dump.txt
       - run:
           name: Send migration results to DynamoDB
           command: |
@@ -405,40 +407,40 @@ workflows:
 
   MainWorkflow:
     jobs:
-      - build-frontend:
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - build-backend:
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - test-frontend:
-            requires: [build-frontend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - test-backend:
-            requires: [build-backend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - scan-frontend:
-            requires: [build-frontend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
-      - scan-backend:
-            requires: [build-backend]
-            filters:
-              branches:
-                only: master
-            context: Slack_Container_Context
+      # - build-frontend:
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - build-backend:
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - test-frontend:
+      #       requires: [build-frontend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - test-backend:
+      #       requires: [build-backend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - scan-frontend:
+      #       requires: [build-frontend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
+      # - scan-backend:
+      #       requires: [build-backend]
+      #       filters:
+      #         branches:
+      #           only: master
+      #       context: Slack_Container_Context
       - deploy-infrastructure:
             requires: [test-frontend, test-backend, scan-frontend, scan-backend]
             filters:
