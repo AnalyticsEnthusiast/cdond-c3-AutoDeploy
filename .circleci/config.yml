@@ -259,7 +259,7 @@ jobs:
               echo "Something went wrong"
               exit 1
             fi
-      - destroy_environment
+      #- destroy_environment
 
   deploy-frontend:
     docker:
