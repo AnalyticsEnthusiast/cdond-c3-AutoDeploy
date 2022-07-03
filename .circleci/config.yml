@@ -13,7 +13,29 @@ commands:
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-
+  
+  revert-migrations:
+    description: Revert the last migration
+    parameters:
+        workflow_id:
+            type: string      
+    steps:
+        - run:
+            name: Revert migrations
+            when: on_fail
+            command: |
+                # Your Memstash or kvdb.io GET URL code goes here
+                # Example: Memstash.io
+                SUCCESS=$(curl -H "token: e52b52de-ee26-41a5-86e8-e8dcc3d995a5" --request GET https://api.memstash.io/values/migration_<< parameters.workflow_id >>)
+                # Example: kvdb.io
+                SUCCESS=$(curl --insecure  https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_<< parameters.workflow_id >>)
+                # Logic for reverting the database state
+                if (( $SUCCESS == 1 ));
+                then
+                    cd ~/project/backend
+                    npm install
+                    npm run migration:revert
+                fi 
 
 jobs:
   build-frontend:
@@ -225,13 +247,14 @@ jobs:
             npm install
             npm run migrations > migrations_dump.txt
       - run:
-          name: Send migration results to SSM Parameter Store
+          name: Send migration results to DynamoDB
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt; then
-              echo "Sending parameter to SSM"
-              aws ssm put-parameter --name "/Migration/status" --value "1" --type "String" --overwrite
+              echo "Sending parameter to DynamoDB"
+              aws dynamodb put-item --table-name migration-tbl --item "{\"ID\": { \"S\": \"55c375200f031261\" }, \"MigrationStatus\": {\"S\": \"1\"}}"
             else
               echo "Something went wrong"
+              exit 1
             fi
       - destroy_environment
 
@@ -368,6 +391,7 @@ jobs:
               exit 1
             fi
       - destroy_environment
+      - revert-migrations
 
 workflows:
   # TestWorkflow:
@@ -429,18 +453,18 @@ workflows:
             filters:
               branches:
                 only: master
-      - deploy-frontend:
-            requires: [run-migrations]
-            filters:
-              branches:
-                only: master
-      - deploy-backend:
-            requires: [run-migrations]
-            filters:
-              branches:
-                only: master
-      - smoke-test:
-            requires: [deploy-backend, deploy-frontend]
-            filters:
-                branches:
-                  only: master
+      # - deploy-frontend:
+      #       requires: [run-migrations]
+      #       filters:
+      #         branches:
+      #           only: master
+      # - deploy-backend:
+      #       requires: [run-migrations]
+      #       filters:
+      #         branches:
+      #           only: master
+      # - smoke-test:
+      #       requires: [deploy-backend, deploy-frontend]
+      #       filters:
+      #           branches:
+      #             only: master

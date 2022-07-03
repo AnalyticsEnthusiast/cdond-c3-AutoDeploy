@@ -16,7 +16,8 @@ Parameters:
     Description: udapeople Database
     Type: String
   DBInstanceClass:
-    Default: db.m5.large
+    #db.m5.large
+    Default: db.t3.micro 
     Description: DB instance class
     Type: String
   DBAllocatedStorage:
