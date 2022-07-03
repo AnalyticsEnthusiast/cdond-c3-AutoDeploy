@@ -21,7 +21,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            VALUE=$(curl -k https://kvdb.io/64xvxrRXspfWtdyJZVPqvf/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            VALUE=$(curl -k https://kvdb.io/Bq7WNXCKBd5bV3oC5NgxDx/migration_${CIRCLE_WORKFLOW_ID:0:7})
             echo $VALUE
             if [[ $VALUE -eq 1 ]]
             then
@@ -362,7 +362,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --stack-name InitialStack \
+              --stack-name cloudfront-55c375200f031261 \
               --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
 
