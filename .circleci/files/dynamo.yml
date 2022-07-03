@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: > 
+        AWS CloudFormation for creating a dynamoDB table for storing backend build information
+
+Parameters:
+  TableName:
+    Default: migration-tbl
+    Description: Default table name for dynamoDB table
+    Type: String
+
+Resources: 
+  MigrationTable: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions:
+        -
+          AttributeName: "ID"
+          AttributeType: "S"
+
+      KeySchema: 
+        - 
+          AttributeName: "ID"
+          KeyType: "HASH"
+
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: !Ref TableName
