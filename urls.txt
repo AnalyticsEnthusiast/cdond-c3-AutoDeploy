@@ -1,0 +1,3 @@
+URL01=https://github.com/AnalyticsEnthusiast/cdond-c3-AutoDeploy
+URL02=http://udapeople-460c237.s3-website-us-west-2.amazonaws.com
+  Cloudfront_url=https://d35e89oa8h2y2c.cloudfront.net/#/employees
